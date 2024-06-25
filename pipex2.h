@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:51:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/24 18:58:36 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/25 22:11:51 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 # include <sys/types.h>
 
 char	**ft_getenv(char *env[]);
-int		ft_fork(char *env[], char argv[]);
+int		ft_fork(char *env[], char *argv[]/* int argc, */, int i);
 char	*ft_slash(char *argv, char *split_res[]);
 char	**create_command(char *argv);
-int		open_file(char *outfile, char *infile);
+void	open_file(/*char *outfile, */char *infile);
 void	ft_continuar(char*env[], char *argv);
 void	free_paths(char **path);
 void	print_fail(char *str, int i, int ex, char *cmd);
