@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:49:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/26 14:57:24 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:00:34 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 int	main(int argc, char *argv[], char *env[])
 {
 	int	j;
-	int i;
-//	int	fd_o;
+	int	i;
 
 	j = 1;
 	i = 0;
@@ -25,15 +24,11 @@ int	main(int argc, char *argv[], char *env[])
 		perror("no good arguments especified");
 		exit(1);
 	}
-	//fd_o = open_file(argv[argc - 1], argv[1]);
 	while (argv[j + 1])
 	{
 		ft_fork(env, &argv[j]/*, argc*/, i);
 		j++;
-		i++;//este contador es para que no me vuelva a pasar la i como 0 y se meta en el open infile otra vez
-/*		if (dup2(fd_o, STDOUT_FILENO) == -1)
-			perror("failed redirecting strdout");
-		ft_continuar(env, argv[argc - 2]);*/
+		i++;
 	}
 	return (0);
 }
@@ -50,7 +45,6 @@ char	**create_command(char *argv)
 
 void	print_fail(char *str, int i, int ex, char *cmd)
 {
-	//si tengo error y quiero hacer exit tendia que ser en proceso hijo, pues si es en el padre me saldre del programa.
 	if (i)
 	{
 		perror(str);

@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 13:15:56 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/26 15:19:28 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:30:08 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,6 @@ int	ft_fork(char *env[], char *argv[]/*, int argc*/, int i)
 	pid_t	pid;
 	int		fd[2];
 
-//	if (i == 0)
-//	{	
-//	write(2, argv[i], ft_strlen(argv[i]));
-//	write(2, "\n", 1);
-//	}
 	if (pipe(fd) == -1)
 		print_fail("pipe", 1, 2, NULL);
 	pid = fork();
@@ -55,9 +50,9 @@ int	ft_fork(char *env[], char *argv[]/*, int argc*/, int i)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		if (i == 0)//esto es para que no me entre en los comandos, y solo me hafa el open del infile
+		if (i == 0)
 		{
-			open_file(/*argv[argc - 1], */argv[0]);
+			open_file(argv[0]);
 			i++;
 		}
 		if (dup2(fd[1], STDOUT_FILENO) == -1)
@@ -66,7 +61,7 @@ int	ft_fork(char *env[], char *argv[]/*, int argc*/, int i)
 	}
 	if (pid > 0)
 	{
-		wait(NULL);
+		wait(NULL);//wait(&status) == pid || if pid = 127 saldra con exit 127, entonces esto ya me saldra del programa con 127
 		close(fd[1]);
 		if (dup2(fd[0], STDIN_FILENO) == -1)
 			print_fail("failed redirecting stdin", 1, 2, NULL);
@@ -101,25 +96,16 @@ char	*ft_slash(char *argv, char *split_res[])
 	return (tmp);
 }
 
-void	open_file(/*char *outfile, */char *infile)
+void	open_file(char *infile)
 {
 	int	fd_i;
-	//int	fd_o;
-	//abrir los fds en los hijos, o al menos abrir el fd del infile en el hijo, exit en el hijo para salir del subproceso.
-//	write(2, infile, ft_strlen(infile));
-//	write(2, "\n", 1);
+	
 	fd_i = open(infile, O_RDONLY);
-	//fd_o = open(outfile, O_WRONLY | O_CREAT |  O_TRUNC, 0644);//hacerlo antes de ejecutar el ultimo comando. if(argc = argc -1) creo outfile
 	if (fd_i < 0)
 		print_fail("Error opening input file\n", 0, 1, NULL);
-/*	if (fd_o < 0)
-		print_fail("Error opening output file\n", 0, 1, NULL);*/
-	/*if (access(infile, R_OK))
-		print_fail("permission denied for infile\n", 0, 126, NULL);*/
 	if (dup2(fd_i, STDIN_FILENO) == -1)
 		print_fail("failed redirecting stdin\n", 1, 2, NULL);
 	close(fd_i);
-	//return (fd_o);
 }
 
 void	ft_continuar(char*env[], char *argv[],/* int argc, */int i)
@@ -131,9 +117,6 @@ void	ft_continuar(char*env[], char *argv[],/* int argc, */int i)
 	int		fd_o;
 
 	i = 0;
-//	write(2, argv[i], ft_strlen(argv[i]));
-//	write(2, "\n", 1);
-//	write(2, "aaa", 3);
 	if (argv[i + 1])
 	{
 	tmp = argv[i];
@@ -141,16 +124,8 @@ void	ft_continuar(char*env[], char *argv[],/* int argc, */int i)
 	split_res = ft_getenv(env);
 	path = ft_slash(tmp, split_res); //pasar argc para indicarle cuando sea el ultimo comando que haga el outfile
 	}
-//	write(2, "\n", 1);
-//	write(2, "aqui", 5);
-//	write(2, "\n", 1);
-//	write(2, path, ft_strlen(path));
-//	write(2, "\n", 1);
 	if (argv[i + 2] == NULL)
 	{
-//	write(2, "\n", 1);
-//	write(2, "una vez", 7);
-//	write(2, "\n", 1);
 	fd_o = open("outfile", O_WRONLY | O_CREAT |  O_TRUNC, 0644);
 	if (fd_o < 0)
 		print_fail("Error opening output file\n", 0, 1, NULL);
