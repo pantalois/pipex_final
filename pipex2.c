@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:49:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/25 22:55:56 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/26 14:57:24 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char *argv[], char *env[])
 	//fd_o = open_file(argv[argc - 1], argv[1]);
 	while (argv[j + 1])
 	{
-		ft_fork(env, &argv[j]/* argc,*/, i);
+		ft_fork(env, &argv[j]/*, argc*/, i);
 		j++;
 		i++;//este contador es para que no me vuelva a pasar la i como 0 y se meta en el open infile otra vez
 /*		if (dup2(fd_o, STDOUT_FILENO) == -1)
@@ -54,7 +54,7 @@ void	print_fail(char *str, int i, int ex, char *cmd)
 	if (i)
 	{
 		perror(str);
-		//exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	else
 	{
@@ -63,10 +63,10 @@ void	print_fail(char *str, int i, int ex, char *cmd)
 			ft_putstr_fd(str, 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd("\n", 2);
-		//	exit(ex);
+			exit(ex);
 		}
 		ft_putstr_fd(str, 2);
-		//exit(ex);
+		exit(ex);
 	}
 }
 
