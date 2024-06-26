@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 13:15:56 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/26 16:30:08 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/26 21:51:50 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	ft_fork(char *env[], char *argv[]/*, int argc*/, int i)
 {
 	pid_t	pid;
 	int		fd[2];
+	int		status = 0;
 
 	if (pipe(fd) == -1)
 		print_fail("pipe", 1, 2, NULL);
@@ -61,10 +62,16 @@ int	ft_fork(char *env[], char *argv[]/*, int argc*/, int i)
 	}
 	if (pid > 0)
 	{
-		wait(NULL);//wait(&status) == pid || if pid = 127 saldra con exit 127, entonces esto ya me saldra del programa con 127
+		//wait(NULL);//wait(&status) == pid || if pid = 127 saldra con exit 127, entonces esto ya me saldra del programa con 127
+		wait(&status);
 		close(fd[1]);
 		if (dup2(fd[0], STDIN_FILENO) == -1)
 			print_fail("failed redirecting stdin", 1, 2, NULL);
+		if (/*WIFEXITED(status) && */WEXITSTATUS(status) == 127)
+			return (127);
+/*		close(fd[1]);
+		if (dup2(fd[0], STDIN_FILENO) == -1)
+			print_fail("failed redirecting stdin", 1, 2, NULL);*/
 	}
 	return (0);
 }

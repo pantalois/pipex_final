@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:49:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/26 16:00:34 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/26 21:51:20 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@ int	main(int argc, char *argv[], char *env[])
 {
 	int	j;
 	int	i;
+	int last_cmd;
 
 	j = 1;
 	i = 0;
+	last_cmd = 0;
 	if (argc != 5)
 	{
 		perror("no good arguments especified");
@@ -26,11 +28,14 @@ int	main(int argc, char *argv[], char *env[])
 	}
 	while (argv[j + 1])
 	{
-		ft_fork(env, &argv[j]/*, argc*/, i);
+		last_cmd = ft_fork(env, &argv[j]/*, argc*/, i);
 		j++;
 		i++;
 	}
-	return (0);
+	if (last_cmd == 127)
+		return (last_cmd);
+	else
+		return (0);
 }
 
 char	**create_command(char *argv)
@@ -57,7 +62,7 @@ void	print_fail(char *str, int i, int ex, char *cmd)
 			ft_putstr_fd(str, 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd("\n", 2);
-			exit(ex);
+		//	exit(ex);
 		}
 		ft_putstr_fd(str, 2);
 		exit(ex);
