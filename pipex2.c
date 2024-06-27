@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:49:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/26 21:51:20 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:15:19 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@ int	main(int argc, char *argv[], char *env[])
 {
 	int	j;
 	int	i;
-	int last_cmd;
+	//int last_cmd;
+	int	status = 0;
+	//char *a = "hola";
 
 	j = 1;
 	i = 0;
-	last_cmd = 0;
+	//last_cmd = 0;
 	if (argc != 5)
 	{
 		perror("no good arguments especified");
@@ -28,12 +30,20 @@ int	main(int argc, char *argv[], char *env[])
 	}
 	while (argv[j + 1])
 	{
-		last_cmd = ft_fork(env, &argv[j]/*, argc*/, i);
-		j++;
-		i++;
+			ft_fork(env, &argv[j]/*, argc*/, i);
+			j++;
+			i++;
 	}
-	if (last_cmd == 127)
-		return (last_cmd);
+	wait(&status);
+	/*	close(fd[1]);
+		if (dup2(fd[0], STDIN_FILENO) == -1)
+			print_fail("failed redirecting stdin", 1, 2, NULL);*/
+
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 127)
+		return (127);
+	//wait aqui
+	/*if (last_cmd == 127)
+		return (last_cmd);*/
 	else
 		return (0);
 }
@@ -62,7 +72,7 @@ void	print_fail(char *str, int i, int ex, char *cmd)
 			ft_putstr_fd(str, 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd("\n", 2);
-		//	exit(ex);
+			exit(ex);
 		}
 		ft_putstr_fd(str, 2);
 		exit(ex);
