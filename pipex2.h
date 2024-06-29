@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:51:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/26 12:44:46 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/29 18:07:41 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,15 @@
 # include <sys/types.h>
 
 char	**ft_getenv(char *env[]);
-int		ft_fork(char *env[], char *argv[]/*, int argc*/, int i);
+int		ft_fork(char *env[], char *argv[], int i, int *fd);
 char	*ft_slash(char *argv, char *split_res[]);
 char	**create_command(char *argv);
-void	open_file(/*char *outfile, */char *infile);
-void	ft_continuar(char*env[], char *argv[], /*int argc, */int i);
+void	open_file(char *infile);
+void	ft_continuar(char*env[], char *argv[], int i);
 void	free_paths(char **path);
 void	print_fail(char *str, int i, int ex, char *cmd);
-void write_execve_args(const char *path, char *const argv[]/*, char *const envp[]*/);
 char	*check_space(char *tmp);
+void	ft_execute(char *env[], char *argv[], char **cmd, char *path);
+void	ft_output(char *argv[]);
 
 #endif

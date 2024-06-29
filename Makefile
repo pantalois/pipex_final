@@ -5,7 +5,8 @@ LIBFT_MAKE = make --no-print-directory -C libft #Para no printear lo que hay den
 NAME = pipex
 
 SRC = pipex2.c \
-	  pipex_utils_2.c
+	  pipex_utils_2.c \
+	  pipex_utils_3.c
 
 OBJ = $(SRC:.c=.o)
 
