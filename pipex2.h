@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:51:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/29 18:07:41 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/30 15:04:55 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	ft_continuar(char*env[], char *argv[], int i);
 void	free_paths(char **path);
 void	print_fail(char *str, int i, int ex, char *cmd);
 char	*check_space(char *tmp);
-void	ft_execute(char *env[], char *argv[], char **cmd, char *path);
-void	ft_output(char *argv[]);
+void	ft_execute(char *env[], char *argv[], char **cmd, char *path, char *split_res[]);
+void	ft_output(char *argv[], char **cmd, char **split_res, char *path);
+int		check_status(char *argv[], int argc, int status);
 
 #endif

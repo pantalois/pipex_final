@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 13:15:56 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/29 18:09:03 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/30 17:38:39 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@ char	**ft_getenv(char *env[])
 	int		i;
 	char	*tmp;
 
+/*	j = 0;
+	while (env[j])
+	{
+		fprintf(stderr, "%s\n", env[j]);
+		j++;
+	}
+	fprintf(stderr, "%d\n", j);*/
 	j = 0;
 	while (env[j] != NULL)
 	{
@@ -27,6 +34,11 @@ char	**ft_getenv(char *env[])
 			env_path = env[j];
 		j++;
 	}
+
+	if (!env[j])
+		write(2, "hola", 4);
+	if (!env[j] || env_path == NULL)
+		return (NULL);
 	split_res = ft_split(&env_path[5], ':');
 	i = 0;
 	while (split_res[i])
@@ -70,6 +82,7 @@ int	ft_fork(char *env[], char *argv[], int i, int *fd)
 char	*ft_slash(char *argv, char *split_res[])
 {
 	int		j;
+	char	*joined_path;
 
 	j = 0;
 	if (!argv)
@@ -81,12 +94,16 @@ char	*ft_slash(char *argv, char *split_res[])
 		while (split_res[j])
 		{
 			argv = check_space(argv);
-			split_res[j] = ft_free_strjoin(split_res[j], argv);
-			if (access(split_res[j], X_OK) == 0)
-				return (split_res[j]);
+			joined_path = ft_strjoin(split_res[j], argv);
+			if (access(joined_path, X_OK) == 0)
+				return (joined_path);
 			else
 			{
-				free(split_res[j]);
+				if (joined_path)
+				{
+					free(joined_path);
+					joined_path = NULL;
+				}
 				j++;
 			}
 		}
@@ -100,7 +117,7 @@ void	open_file(char *infile)
 
 	fd_i = open(infile, O_RDONLY);
 	if (fd_i < 0)
-		print_fail("Error opening input file", 0, 1, NULL);
+		print_fail("bash: infile: Permission denied", 0, 1, NULL);
 	if (dup2(fd_i, STDIN_FILENO) == -1)
 		print_fail("failed redirecting stdin", 1, 2, NULL);
 	close(fd_i);
@@ -117,16 +134,22 @@ void	ft_continuar(char*env[], char *argv[], int i)
 	cmd = NULL;
 	split_res = NULL;
 	path = NULL;
+	fprintf(stderr, "%s\n", argv[i]);
 	if (argv[i + 1])
 	{
 		tmp = argv[i];
+		fprintf(stderr, "A%s\n",tmp);
 		cmd = create_command(tmp);
 		split_res = ft_getenv(env);
 		path = ft_slash(tmp, split_res);
 	}
 	if (argv[i + 2] == NULL)
-		ft_output(argv);
-	ft_execute(env, argv, cmd, path);
-	free_paths(split_res);
+		ft_output(argv, cmd, split_res, path);
+	ft_execute(env, argv, cmd, path, split_res);
+	if (split_res)
+	{
+		free_paths(split_res);
+		split_res = NULL;
+	}
 	free_paths(cmd);
 }

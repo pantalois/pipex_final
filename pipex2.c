@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:49:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/29 18:13:20 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/06/30 17:29:06 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	main(int argc, char *argv[], char *env[])
 	int	i;
 	int	status;
 	int	fd[2];
+	/*pid_t pids[argc - 3]*/
 
 	j = 1;
 	i = 0;
@@ -31,13 +32,12 @@ int	main(int argc, char *argv[], char *env[])
 	{
 		if (pipe(fd) == -1)
 			print_fail("pipe", 1, 2, NULL);
-		ft_fork(env, &argv[j], i, fd);
+		/*pids = */ft_fork(env, &argv[j], i, fd);
 		j++;
 		i++;
-		wait(&status);
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 127)
-			return (127);
 	}
+	if (check_status(argv, argc, status) == 127)
+		return (127);
 	return (0);
 }
 
@@ -47,12 +47,15 @@ char	**create_command(char *argv)
 
 	cmd = NULL;
 	if (argv == NULL)
+	{
+		write(2, "chao\n", 5);
 		return (cmd);
+	}
 	cmd = ft_split(argv, ' ');
 	if (!cmd)
 	{
-		write(2, "o\n", 2);
-		print_fail("command not found:", 0, 127, argv);
+		//write(2, "o\n", 2);
+		print_fail("command not found:", 0, 127, argv); //split didnt work error msg
 	}
 	return (cmd);
 }
@@ -62,6 +65,7 @@ void	print_fail(char *str, int i, int ex, char *cmd)
 	if (i)
 	{
 		perror(str);
+		write(2, "nojodas", 7);
 		exit(EXIT_FAILURE);
 	}
 	else
@@ -71,6 +75,8 @@ void	print_fail(char *str, int i, int ex, char *cmd)
 			ft_putstr_fd(str, 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd("\n", 2);
+		//	write(2, "asd\n", 4);
+		//	fprintf(stderr, "%d \n", ex);
 			exit(ex);
 		}
 		ft_putstr_fd(str, 2);
@@ -90,9 +96,11 @@ void	free_paths(char **path)
 	while (path[i])
 	{
 		free(path[i]);
+		path[i] = NULL;
 		i++;
 	}
 	free(path);
+	path = NULL;
 }
 
 char	*check_space(char *tmp)
