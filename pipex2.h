@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:51:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/07/01 18:47:29 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/07/01 20:49:17 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,8 @@ void	ft_execute(char *env[], char *argv[], char **cmd, char *path);
 void	ft_output(char *argv[], char **cmd, char **split_res, char *path);
 int		check_status(char *argv[], int argc, int status, int *pids);
 char	*path_exist(char *env[]);
+char	*ft_join_path(char *argv, char	*split_res[]);
+void	ft_continue2(char *argv[], char *cmd[], char *split_res[], char *path);
+void	ft_unset(char *path, char *argv[], char **cmd, char *env[]);
 
 #endif

@@ -6,7 +6,8 @@ NAME = pipex
 
 SRC = pipex2.c \
 	  pipex_utils_2.c \
-	  pipex_utils_3.c
+	  pipex_utils_3.c \
+	  pipex_utils_4.c
 
 OBJ = $(SRC:.c=.o)
 

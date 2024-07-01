@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 13:15:56 by loigonza          #+#    #+#             */
-/*   Updated: 2024/07/01 19:35:38 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/07/01 20:42:39 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,22 +71,7 @@ char	*ft_slash(char *argv, char *split_res[])
 		return (argv);
 	else
 	{
-		while (split_res[j])
-		{
-			argv = check_space(argv);
-			joined_path = ft_strjoin(split_res[j], argv);
-			if (access(joined_path, X_OK) == 0)
-				return (joined_path);
-			else
-			{
-				if (joined_path)
-				{
-					free(joined_path);
-					joined_path = NULL;
-				}
-				j++;
-			}
-		}
+		return (joined_path = ft_join_path(argv, split_res));
 	}
 	return (NULL);
 }
@@ -121,22 +106,11 @@ void	ft_continuar(char*env[], char *argv[], int i)
 		cmd = create_command(tmp);
 		env_path = path_exist(env);
 		if (env_path)
-			split_res = ft_getenv(/*env, */env_path);
+			split_res = ft_getenv(env_path);
 		if (split_res)
 			path = ft_slash(tmp, split_res);
 	}
-	if (argv[i + 2] == NULL)
-		ft_output(argv, cmd, split_res, path);
-	if (split_res)
-	{
-		free_paths(split_res);
-		split_res = NULL;
-	}
-	ft_execute(env, argv, cmd, path/*, split_res*/);
-/*	if (split_res)
-	{
-		free_paths(split_res);
-		split_res = NULL;
-	}*/
+	ft_continue2(argv, cmd, split_res, path);
+	ft_execute(env, argv, cmd, path);
 	free_paths(cmd);
 }
