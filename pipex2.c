@@ -6,7 +6,7 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 12:49:26 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/30 17:29:06 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:47:00 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int	main(int argc, char *argv[], char *env[])
 	int	i;
 	int	status;
 	int	fd[2];
-	/*pid_t pids[argc - 3]*/
+//	int	retorno;
+	int pids[2];
 
 	j = 1;
 	i = 0;
@@ -32,13 +33,15 @@ int	main(int argc, char *argv[], char *env[])
 	{
 		if (pipe(fd) == -1)
 			print_fail("pipe", 1, 2, NULL);
-		/*pids = */ft_fork(env, &argv[j], i, fd);
+		pids[i] = ft_fork(env, &argv[j], i, fd);
 		j++;
 		i++;
 	}
-	if (check_status(argv, argc, status) == 127)
-		return (127);
-	return (0);
+	/*if (check_status(argv, argc, status) == 127)
+		return (retorno);*/
+	/*write(2,"pppp\n", 5); 
+	return (retorno);*/
+	return (check_status(argv, argc, status, pids));
 }
 
 char	**create_command(char *argv)
@@ -48,14 +51,14 @@ char	**create_command(char *argv)
 	cmd = NULL;
 	if (argv == NULL)
 	{
-		write(2, "chao\n", 5);
+		//write(2, "chao\n", 5);
 		return (cmd);
 	}
 	cmd = ft_split(argv, ' ');
 	if (!cmd)
 	{
 		//write(2, "o\n", 2);
-		print_fail("command not found:", 0, 127, argv); //split didnt work error msg
+		print_fail(": command not found", 0, 127, argv); //split didnt work error msg
 	}
 	return (cmd);
 }
@@ -65,22 +68,23 @@ void	print_fail(char *str, int i, int ex, char *cmd)
 	if (i)
 	{
 		perror(str);
-		write(2, "nojodas", 7);
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
 		if (ex == 127)
 		{
-			ft_putstr_fd(str, 2);
 			ft_putstr_fd(cmd, 2);
+			ft_putstr_fd(str, 2);
+			//ft_putstr_fd(cmd, 2);
 			ft_putstr_fd("\n", 2);
 		//	write(2, "asd\n", 4);
 		//	fprintf(stderr, "%d \n", ex);
 			exit(ex);
 		}
-		ft_putstr_fd(str, 2);
 		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(str, 2);
+		//ft_putstr_fd(cmd, 2);
 		write(2, "\n", 1);
 		exit(ex);
 	}

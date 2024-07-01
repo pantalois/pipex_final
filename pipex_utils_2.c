@@ -6,39 +6,18 @@
 /*   By: loigonza <loigonza@42.barcel>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 13:15:56 by loigonza          #+#    #+#             */
-/*   Updated: 2024/06/30 17:38:39 by loigonza         ###   ########.fr       */
+/*   Updated: 2024/07/01 19:35:38 by loigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex2.h"
 
-char	**ft_getenv(char *env[])
+char	**ft_getenv(char *env_path)
 {
-	int		j;
-	char	*env_path;
 	char	**split_res;
 	int		i;
 	char	*tmp;
 
-/*	j = 0;
-	while (env[j])
-	{
-		fprintf(stderr, "%s\n", env[j]);
-		j++;
-	}
-	fprintf(stderr, "%d\n", j);*/
-	j = 0;
-	while (env[j] != NULL)
-	{
-		if ((ft_strncmp(env[j], "PATH=", 5)) == 0)
-			env_path = env[j];
-		j++;
-	}
-
-	if (!env[j])
-		write(2, "hola", 4);
-	if (!env[j] || env_path == NULL)
-		return (NULL);
 	split_res = ft_split(&env_path[5], ':');
 	i = 0;
 	while (split_res[i])
@@ -75,8 +54,9 @@ int	ft_fork(char *env[], char *argv[], int i, int *fd)
 		close(fd[1]);
 		if (dup2(fd[0], STDIN_FILENO) == -1)
 			print_fail("failed redirecting stdin", 1, 2, NULL);
+		return (pid);
 	}
-	return (0);
+	return (pid);
 }
 
 char	*ft_slash(char *argv, char *split_res[])
@@ -108,7 +88,7 @@ char	*ft_slash(char *argv, char *split_res[])
 			}
 		}
 	}
-	return (argv);
+	return (NULL);
 }
 
 void	open_file(char *infile)
@@ -129,27 +109,34 @@ void	ft_continuar(char*env[], char *argv[], int i)
 	char	**split_res;
 	char	*path;
 	char	*tmp;
+	char	*env_path;
 
 	i = 0;
 	cmd = NULL;
 	split_res = NULL;
 	path = NULL;
-	fprintf(stderr, "%s\n", argv[i]);
 	if (argv[i + 1])
 	{
 		tmp = argv[i];
-		fprintf(stderr, "A%s\n",tmp);
 		cmd = create_command(tmp);
-		split_res = ft_getenv(env);
-		path = ft_slash(tmp, split_res);
+		env_path = path_exist(env);
+		if (env_path)
+			split_res = ft_getenv(/*env, */env_path);
+		if (split_res)
+			path = ft_slash(tmp, split_res);
 	}
 	if (argv[i + 2] == NULL)
 		ft_output(argv, cmd, split_res, path);
-	ft_execute(env, argv, cmd, path, split_res);
 	if (split_res)
 	{
 		free_paths(split_res);
 		split_res = NULL;
 	}
+	ft_execute(env, argv, cmd, path/*, split_res*/);
+/*	if (split_res)
+	{
+		free_paths(split_res);
+		split_res = NULL;
+	}*/
 	free_paths(cmd);
 }
